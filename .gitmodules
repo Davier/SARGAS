@@ -1,12 +1,16 @@
 [submodule "poky"]
 	path = poky
-	url = ./poky
+	url = git://git.yoctoproject.org/poky.git
+	branch = daisy
 [submodule "poky-dep/meta-ros"]
 	path = poky-dep/meta-ros
 	url = https://github.com/bmwcarit/meta-ros.git
+	branch = master
 [submodule "poky-dep/meta-oe"]
 	path = poky-dep/meta-oe
 	url = https://github.com/openembedded/meta-oe
+	branch = daisy
 [submodule "poky-dep/meta-ti"]
 	path = poky-dep/meta-ti
 	url = git://git.yoctoproject.org/meta-ti
+	branch = daisy
