@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/florian/catkin_ws/src/sharp/build/devel/setup.sh
