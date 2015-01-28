@@ -1,0 +1,11 @@
+
+&epwmss2 {
+	status = "okay";
+};
+
+&eqep2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <>;
+
+	status = "okay";
+};

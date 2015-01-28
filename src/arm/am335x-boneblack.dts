@@ -27,10 +27,10 @@
 	P9_41_pinmux {
 		status = "disabled";
 	};
-	/* mmc1 */
-	P9_92_pinmux {
+	/* mmc1 (but used for qep0 */
+/*	P9_92_pinmux {
 		status = "disabled";
-	};
+	};*/
 };
 
 &mmc1 {
@@ -44,23 +44,23 @@
 
 #include "am335x-boneblack-emmc.dtsi"
 /* HDMI: with audio */
-#include "am335x-boneblack-nxp-hdmi-audio.dtsi"
+/* #include "am335x-boneblack-nxp-hdmi-audio.dtsi" */
 /* HDMI: without audio */
 /* #include "am335x-boneblack-nxp-hdmi-no-audio.dtsi" */
 
 /* can0: P9.19, P9.20: disable: i2c2: cape eeprom */
 /* can0: peripheral */
-#include "am335x-can0.dtsi"
+/* #include "am335x-can0.dtsi" */
 /* can0: pinmux */
 /* #include "am335x-bone-can0.dtsi" */
 
 /* can1: P9_24, P9_26 */
-#include "am335x-can1.dtsi"
+/* #include "am335x-can1.dtsi" */
 /* #include "am335x-bone-can1.dtsi" */
 
 /* i2c2: cape eeprom */
 /* P9.19 P9.20 */
-#include "am335x-bone-i2c2-cape-eeprom.dtsi"
+/* #include "am335x-bone-i2c2-cape-eeprom.dtsi" */
 
 /* spi0: */
 /* P9.17 spi0_cs0 */
@@ -84,17 +84,34 @@
 /* #include "am335x-bone-spi1a-spidev.dtsi" */
 
 /* uart1: P9.24, P9.26 */
-#include "am335x-ttyO1.dtsi"
+/* #include "am335x-ttyO1.dtsi" */
 /* #include "am335x-bone-ttyO1.dtsi" */
 /* uart2: P9.21, P9.22 */
-#include "am335x-ttyO2.dtsi"
+/* #include "am335x-ttyO2.dtsi" */
 /* #include "am335x-bone-ttyO2.dtsi" */
 /* uart4: P9.11, P9.13 */
-#include "am335x-ttyO4.dtsi"
+/* #include "am335x-ttyO4.dtsi" */
 /* #include "am335x-bone-ttyO4.dtsi" */
 /* uart5: P8.37, P8.38 boneblack: hdmi has to be disabled for ttyO5 */
-#include "am335x-ttyO5.dtsi"
+/* #include "am335x-ttyO5.dtsi" */
 /* #include "am335x-bone-ttyO5.dtsi" */
+
+/* eqep0 */
+#include "am335x-bone-eqep0.dtsi"
+/* eqep1 */
+#include "am335x-bone-eqep1.dtsi"
+/* eqep2 */
+#include "am335x-bone-eqep2.dtsi"
+/* eqep2b */
+/* #include "am335x-bone-eqep2b.dtsi" */
+
+/* 4 ADC */
+#include "am335x-bone-ti-tscadc-4-wire.dtsi"
+
+/* PWM */
+#include "am335x-bone-ehrpwm0.dtsi"
+#include "am335x-bone-ehrpwm1.dtsi"
+#include "am335x-bone-ehrpwm2.dtsi"
 
 /* Capes */
 /* http://elinux.org/4D_4.3_LCD_CAPE */

@@ -1,0 +1,15 @@
+#include "am335x-ehrpwm0.dtsi"
+
+&ocp {
+	/* EHRPWM0A */
+	P9_22_pinmux {
+		mode = "pwm";
+	};
+
+	/* EHRPWM0B */
+	P9_21_pinmux {
+		mode = "pwm";
+	};
+};
+
+

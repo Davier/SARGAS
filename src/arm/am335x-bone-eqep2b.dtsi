@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 2013 Nathaniel R. Lewis - http://nathanielrlewis.com/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ * 
+ * Enable eQEP2 on the Beaglebone White and Black
+ * These pins don't conflict with the HDMI
+ */
+
+#include "am335x-eqep2.dtsi"
+
+&ocp {
+	/* eQEP2_index */
+	P8_16_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP2_strobe */
+	P8_15_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP2A_in */
+	P8_12_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP2B_in */
+	P8_11_pinmux {
+		mode = "qep";
+	};
+};
+

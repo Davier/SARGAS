@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 2013 Nathaniel R. Lewis - http://nathanielrlewis.com/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ * 
+ * Enable eQEP0 on the Beaglebone Black - incompatible with BB White because
+ * most of the eQEP0 pins on Beaglebone white are not broken out.
+ */
+
+#include "am335x-eqep0.dtsi"
+
+&ocp {
+	/* eQEP0_index */
+	P9_91_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP0_strobe */
+	P9_25_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP0A_in */
+	P9_92_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP0B_in */
+	P9_27_pinmux {
+		mode = "qep";
+	};
+};
+

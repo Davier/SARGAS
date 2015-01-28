@@ -1,0 +1,34 @@
+/*
+ * Copyright (C) 2013 Nathaniel R. Lewis - http://nathanielrlewis.com/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ * 
+ * Enable eQEP1 on the Beaglebone White and Black
+ */
+
+#include "am335x-eqep1.dtsi"
+
+&ocp {
+	/* eQEP_index */
+	P8_31_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP1_strobe */
+	P8_32_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP1A_in */
+	P8_35_pinmux {
+		mode = "qep";
+	};
+
+	/* eQEP1B_in */
+	P8_33_pinmux {
+		mode = "qep";
+	};
+};
+
