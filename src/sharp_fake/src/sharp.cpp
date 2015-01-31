@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     ADC adc_left(6); 
 
     ros::init(argc, argv, "sharp", ros::init_options::NoSigintHandler);
-  
+
     ros::NodeHandle n;
   
     const double distance_min=0.093;//in meters

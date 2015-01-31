@@ -12,8 +12,8 @@ int main(int argc, char** argv){
   while(n.ok()){
     odom_broadcaster.sendTransform(
       tf::StampedTransform(
-        tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(-0.291, 0.0, 0.0)),
-        ros::Time::now(), "odom", "base_link"));
+        tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.291, 0.0, 0.0)),
+        ros::Time::now(),"odom","base_link"));
 
     r.sleep();
   }
