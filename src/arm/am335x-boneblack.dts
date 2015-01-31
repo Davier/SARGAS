@@ -31,6 +31,9 @@
 /*	P9_92_pinmux {
 		status = "disabled";
 	};*/
+	P9_42_pinmux {
+		status = "disabled";
+	};
 };
 
 &mmc1 {
@@ -101,9 +104,9 @@
 /* eqep1 */
 #include "am335x-bone-eqep1.dtsi"
 /* eqep2 */
-#include "am335x-bone-eqep2.dtsi"
+/* #include "am335x-bone-eqep2.dtsi" */
 /* eqep2b */
-/* #include "am335x-bone-eqep2b.dtsi" */
+#include "am335x-bone-eqep2b.dtsi" 
 
 /* 4 ADC */
 #include "am335x-bone-ti-tscadc-4-wire.dtsi"
