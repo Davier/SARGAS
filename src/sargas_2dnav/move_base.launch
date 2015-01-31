@@ -2,10 +2,12 @@
   <master auto="start"/>
 
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find sargas_2dnav)/map/plan_ece.png 0.033"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$map/plan_ece.png 0.033">
+  </node>
 
-  <!--- Run AMCL -->
-  <include file="$(find amcl)/examples/amcl_diff.launch" />
+  <!--- Run fake localization -->
+  <node pkg="fake_localization" type="fake_localization" respawn="false" name="fake_localization" output="screen">
+  </node>
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find sargas_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" />
