@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     sharp.range_min = 0.03+distance_min;
     sharp.range_max = 0.4+distance_max;
     sharp.ranges.resize(3);
-  
+
     for(int i=1;i<=1024;i++)
     {
      lookup[0][i-1]=(3.00*1000.00)*pow(i,(-1.00));
@@ -60,6 +60,7 @@ int main(int argc, char **argv)
       raw[0] = adc_right.getValue();
       raw[1] = adc_middle.getValue();
       raw[2] = adc_left.getValue();
+      //ROS_INFO("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
       sharp.header.stamp = ros::Time::now();
       for(int i=0;i<3;i++)
       {

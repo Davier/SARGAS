@@ -13,5 +13,12 @@ ADC::ADC(unsigned int id) {
 }
 
 unsigned int ADC::getValue() {
-	return readFile<unsigned int>(m_input_file);
+	unsigned int value;
+	try {
+		value = readFile<unsigned int>(m_input_file);
+	}
+	catch(...) {
+		value = 0;
+	}
+	return value;
 }
