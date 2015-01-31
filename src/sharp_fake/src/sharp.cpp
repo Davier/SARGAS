@@ -43,11 +43,11 @@ int main(int argc, char **argv)
   sharp.range_max = 0.4+distance_max;
   sharp.ranges.resize(3);
 
-  for(int i=0;i<1024;i++)
+  for(int i=1;i<=1024;i++)
   {
-   lookup[0][i]=(1.25*10.00)*pow(i,(-0.47));
-   lookup[1][i]=(3.08*10.00)*pow(i,(-1.03));
-   lookup[2][i]=(3.57*10.00)*pow(i,(-1.06));
+   lookup[0][i-1]=(3.00*1000.00)*pow(i,(-1.00));
+   lookup[1][i-1]=(3.08*1000.00)*pow(i,(-1.03));
+   lookup[2][i-1]=(3.57*1000.00)*pow(i,(-1.06));
   }
   
   std::ifstream adc_file1;
@@ -69,18 +69,18 @@ int main(int argc, char **argv)
     for(int i=0;i<3;i++)
     {
       raw[i]=stoi(raw_st[i]);
-	  if(raw[i]>1023)
+	  if(raw[i]>1024)
 	{
-          raw[i]=1023;
+          raw[i]=1024;
         }
       else if(raw[i]<85)//a determiner
 	{
-	  raw[i]=0;
+	  raw[i]=1;
 	}
 	 
-    sharp.ranges[i]=lookup[i][raw[i]]+offset[i];
-    sharp_pub.publish(sharp);
+    sharp.ranges[i]=lookup[i][raw[i]-1]+offset[i];
     }
+    sharp_pub.publish(sharp);
     ros::spinOnce();
 
     loop_rate.sleep();
