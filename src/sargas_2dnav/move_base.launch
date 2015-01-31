@@ -2,7 +2,7 @@
   <master auto="start"/>
 
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$sargas_2dnav/plan_ece.png 0.033">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find sargas_2dnav)/map/plan_ece.yaml">
   </node>
 
   <!--- Run fake localization -->
