@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(10);
   sensor_msgs::LaserScan sharp;
   
-  sharp.header.frame_id="sharp";
+  sharp.header.frame_id="base_link";
   sharp.angle_min = -pi/4.0;
   sharp.angle_max = pi/4.0;
   sharp.angle_increment = pi/4.0;
