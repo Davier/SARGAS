@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   std::string raw_st[3];
   float lookup[3][1024];
   
-  ros::Publisher sharp_pub= n.advertise<sensor_msgs::LaserScan>("sharp", 50);
+  ros::Publisher sharp_pub= n.advertise<sensor_msgs::LaserScan>("scan", 50);
   
   ros::Rate loop_rate(10);
   sensor_msgs::LaserScan sharp;
