@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     ADC adc_middle(5); 
     ADC adc_left(6); 
 
-    ros::init(argc, argv, "sharp", ros::init_options::NoSigintHandler);
+    ros::init(argc, argv, "sharp");
 
     ros::NodeHandle n;
   
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     
     ros::Publisher sharp_pub= n.advertise<sensor_msgs::LaserScan>("scan", 50);
     
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(1);
     sensor_msgs::LaserScan sharp;
     
     sharp.header.frame_id="base_link";
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
       raw[0] = adc_right.getValue();
       raw[1] = adc_middle.getValue();
       raw[2] = adc_left.getValue();
-      ROS_INFO("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
+      ROS_DEBUG("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
       sharp.header.stamp = ros::Time::now();
       for(int i=0;i<3;i++)
       {

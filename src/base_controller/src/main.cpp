@@ -38,24 +38,26 @@ int main(int argc, char **argv) {
 		servo_angular.setDuty(7.5f);
 		servo_angular.start();
 
-		ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler);
+		ros::init(argc, argv, "base_controller");
 		ros::NodeHandle nh;
-		ros::Subscriber command_sub = nh.subscribe<geometry_msgs::Twist>("cmd_vel", 5, commandReceivedCallback); // Subscribe with a buffer of 5 messages
+		ros::Subscriber command_sub = nh.subscribe<geometry_msgs::Twist>("cmd_vel", 5, commandReceivedCallback); // Subscribe with a buffer of 2 messages
 	
-		startFlightRegulator(motor_linear);
-	
+		//startFlightRegulator(motor_linear);
+		
 		ros::Rate loop_rate(100); // Execute loop at 100Hz
 		while(ros::ok()) {
 			if(last_command_dirty) {
 				last_command_dirty = false;
 				float duty_linear = 5.0f;
-				if(last_command->linear.x > 0.1f) {
+				if(last_command->linear.x < -0.01f) {
+
 					duty_linear = 5.130f;
 				}
 				motor_linear.setDuty(duty_linear);
-				const float max_left = 6.1f;
+				const float max_left = 6.25f;
 				const float max_right = 8.75f;
-				float duty_angular = (max_right - max_left) / 2.0f * last_command->angular.z; // commands should be normalized and clamped
+				const float zero = (max_left + max_right) / 2.0f;
+				float duty_angular = zero + (max_right - zero) * last_command->angular.z; // commands should be normalized and clamped
 				servo_angular.setDuty(duty_angular);
 				ROS_INFO("Duty: l: %f / a: %f", duty_linear, duty_angular);
 			}

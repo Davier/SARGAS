@@ -1,69 +1,98 @@
 #include <ros/ros.h>
-#include <ros/time.h>
-#include <fstream>
-#include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
-#include <cmath>
-#include <string>
+#include <nav_msgs/Odometry.h>
 
 #include "SysFsHelper.hpp"
 
 using namespace sysfs;
 
-int main(int argc,char** argv){
-	try {
-		ros::init(argc, argv, "odometry_publisher", ros::init_options::NoSigintHandler);
-		ros::NodeHandle n;
-		ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("base_pose_ground_truth",50);
-		ros::Rate r(1.0);
-		double position_actuelle_gauche=0, position_actuelle_droit=0;
-		double position_passee_gauche=0, position_passee_droit=0;
-		double delta_gauche=0,delta_droit=0;
-		double temps_passe=0,interval=0;
-		double x=0,y=0,th=0;
-		double vx=0,vy=0,vth=0;
-		const double pi=4*atan(1);
-		const double nb_strip=32;
-		const double rayon=69.0/2.0*0.001;//in m
-		const double espacement=0.240;//ecart entre les roues en m
-	
-		nav_msgs::Odometry odom;
-		odom.header.frame_id="odom"; 
-		odom.child_frame_id="base_link";
-		
-		while(n.ok())
-		{
-			odom.header.stamp=ros::Time::now();
-			interval=odom.header.stamp.toSec()-temps_passe;
-			temps_passe=odom.header.stamp.toSec();
-			
-			position_actuelle_gauche = (double) readFile<unsigned int>(resolveFilePath("/sys/devices/ocp.*/48304000.epwmss/48304180.eqep/position"));
-			position_actuelle_droit = (double) readFile<unsigned int>(resolveFilePath("/sys/devices/ocp.*/48302000.epwmss/48302180.eqep/position"));
-			
-			delta_gauche=(position_actuelle_gauche-position_passee_gauche)*(2.0*pi/nb_strip*rayon);//distance parcourue par la roue gauche en metres apres la derniere mesure
-			delta_droit=(position_actuelle_droit-position_passee_droit)*(2.0*pi/nb_strip*rayon);//distance parcourue par la roue gauche en metres apres la derniere mesure
-			th=(delta_droit-delta_gauche)/espacement;//calcule l'orientation du robot dans le sens trigonometrique
-			x=(delta_droit+delta_gauche)/2;
-			vx=x/interval;
-			vth=th/interval;
-	
-			odom.twist.twist.linear.x=vx;
-			odom.twist.twist.linear.y=0;
-			odom.twist.twist.angular.z=vth;
-			odom.pose.pose.position.x=x;
-			odom.pose.pose.position.y=0;
-			odom.pose.pose.position.z=0;
-			odom.pose.pose.orientation=tf::createQuaternionMsgFromYaw(th);
-			odom_pub.publish(odom);
-	
-			position_passee_gauche=position_actuelle_gauche;
-			position_passee_droit=position_actuelle_droit;
-	
-			ros::spinOnce();
-			r.sleep();
-		}
-	}
-	catch (std::exception &e) {
-		ROS_ERROR("Exception : %s", e.what());
-	}
+int main(int argc, char** argv){
+  ros::init(argc, argv, "odometry_publisher");
+
+  ros::NodeHandle n;
+  ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("base_pose_ground_truth", 50);
+  tf::TransformBroadcaster odom_broadcaster;
+
+  std::string pos_left_file = resolveFilePath("/sys/devices/ocp.*/48304000.epwmss/48304180.eqep/position");
+  std::string pos_right_file = resolveFilePath("/sys/devices/ocp.*/48302000.epwmss/48302180.eqep/position");
+
+  double x = 0.0f;
+  double y = 0.0f;
+  double th = 0.0f;
+
+  double vx = 0.0f;
+  double vy = 0.0f;
+  double vth = 0.0f;
+
+  double left_last = ((double) readFile<unsigned int>(pos_left_file)) * 0.001693515f;
+  double right_last = ((double) readFile<unsigned int>(pos_right_file)) * 0.001693515f;
+
+  ros::Time current_time, last_time;
+  current_time = ros::Time::now();
+  last_time = ros::Time::now();
+
+  ros::Rate r(1.0);
+  while(n.ok()){
+
+    ros::spinOnce();               // check for incoming messages
+    current_time = ros::Time::now();
+
+    //compute odometry in a typical way given the velocities of the robot
+    double dt = (current_time - last_time).toSec();
+    double left = ((double) readFile<unsigned int>(pos_left_file)) * 0.001693515f;
+    double dleft = left - left_last;
+    left_last = left;
+    double right = ((double) readFile<unsigned int>(pos_right_file)) * 0.001693515f;
+    double dright = right - right_last;
+    right_last = right;
+    vx = (dright + dleft) / (2.0f * dt);
+    vth = (dright - dleft) / (0.276f * dt);
+    double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
+    double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
+    double delta_th = vth * dt;
+
+    x += delta_x;
+    y += delta_y;
+    th += delta_th;
+
+    //since all odometry is 6DOF we'll need a quaternion created from yaw
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
+
+    //first, we'll publish the transform over tf
+    geometry_msgs::TransformStamped odom_trans;
+    odom_trans.header.stamp = current_time;
+    odom_trans.header.frame_id = "odom";
+    odom_trans.child_frame_id = "base_link";
+
+    odom_trans.transform.translation.x = x;
+    odom_trans.transform.translation.y = y;
+    odom_trans.transform.translation.z = 0.0;
+    odom_trans.transform.rotation = odom_quat;
+
+    //send the transform
+    odom_broadcaster.sendTransform(odom_trans);
+
+    //next, we'll publish the odometry message over ROS
+    nav_msgs::Odometry odom;
+    odom.header.stamp = current_time;
+    odom.header.frame_id = "odom";
+
+    //set the position
+    odom.pose.pose.position.x = x;
+    odom.pose.pose.position.y = y;
+    odom.pose.pose.position.z = 0.0;
+    odom.pose.pose.orientation = odom_quat;
+
+    //set the velocity
+    odom.child_frame_id = "base_link";
+    odom.twist.twist.linear.x = vx;
+    odom.twist.twist.linear.y = vy;
+    odom.twist.twist.angular.z = vth;
+
+    //publish the message
+    odom_pub.publish(odom);
+
+    last_time = current_time;
+    r.sleep();
+  }
 }
