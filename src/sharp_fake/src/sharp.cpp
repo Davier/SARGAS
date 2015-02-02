@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
   const double distance_min=0.093;//in meters
   const double distance_max=0.108;
-  const double pi=1*atan(1);
+  const double pi=4*atan(1);
   double offset[3]={0.106,0.093,0.108};
   int raw[3];
   std::string raw_st[3];
