@@ -7,7 +7,7 @@
 geometry_msgs::Twist::ConstPtr last_command;
 bool last_command_dirty = false;
 void commandReceivedCallback(const geometry_msgs::Twist::ConstPtr &msg) {
-	ROS_INFO("Callback ! l: %f / a: %f", msg->linear.x, msg->angular.z);
+	ROS_INFO("Commands: l: %f / a: %f", msg->linear.x, msg->angular.z);
 	last_command = msg;
 	last_command_dirty = true;
 }
@@ -28,12 +28,12 @@ void startFlightRegulator(PWM &motor) {
 int main(int argc, char **argv) {
 	try {
 		// TODO: check why ros catches every exception ... meanwhile this must stay before ros::init()
-		PWM motor_linear(0, 1); // P9_22
+		PWM motor_linear(4, 1); // P8_13
 		motor_linear.setFrequency(50);
 		motor_linear.setDuty(5.0f);
 		motor_linear.start();
 
-		PWM servo_angular(0, 0); // P9_21
+		PWM servo_angular(4, 0); // P8_19
 		servo_angular.setFrequency(50);
 		servo_angular.setDuty(7.5f);
 		servo_angular.start();
@@ -48,9 +48,16 @@ int main(int argc, char **argv) {
 		while(ros::ok()) {
 			if(last_command_dirty) {
 				last_command_dirty = false;
-				motor_linear.setDuty(100.0f * last_command->linear.x);
-				ROS_INFO("Set duty to %f", 100.0f * last_command->linear.x);
-				//servo_angular.setDuty(
+				float duty_linear = 5.0f;
+				if(last_command->linear.x > 0.1f) {
+					duty_linear = 5.130f;
+				}
+				motor_linear.setDuty(duty_linear);
+				const float max_left = 6.1f;
+				const float max_right = 8.75f;
+				float duty_angular = (max_right - max_left) / 2.0f * last_command->angular.z; // commands should be normalized and clamped
+				servo_angular.setDuty(duty_angular);
+				ROS_INFO("Duty: l: %f / a: %f", duty_linear, duty_angular);
 			}
 			ros::spinOnce();
 			loop_rate.sleep();
