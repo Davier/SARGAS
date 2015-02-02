@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   move_base
   odom_fake
   sharp_fake
-  tf_fake
 )
 
 ## System dependencies are found with CMake's conventions
