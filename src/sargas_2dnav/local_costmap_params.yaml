@@ -5,6 +5,6 @@ local_costmap:
   publish_frequency: 2.0
   static_map: true
   rolling_window: false
-  width: 1149
-  height: 1484
-  resolution: 0.0333
+  width: 193
+  height: 250
+  resolution: 0.2
