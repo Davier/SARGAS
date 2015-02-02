@@ -27,7 +27,7 @@ int main(int argc,char** argv){
 	double temps_passe=0,interval=0;
 	double x=0,y=0,th=0;
 	double vx=0,vy=0,vth=0;
-	const double pi=1*atan(1);
+	const double pi=4*atan(1);
 	const double nb_strip=32;
 	const double rayon=69.0/2.0*0.001;//in m
 	const double espacement=0.240;//ecart entre les roues en m
