@@ -17,6 +17,6 @@ catkin_package()
 ## Build talker and listener
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(sharp src/sharp.cpp)
+add_executable(sharp src/sharp.cpp src/SysFsHelper.cpp src/ADC.cpp)
 target_link_libraries(sharp ${catkin_LIBRARIES})
 add_dependencies(sharp sharp_generate_messages_cpp)
