@@ -1,6 +1,0 @@
-<launch>
-  <master auto="start"/>
-
-  <node name="sharp_fake" pkg="sharp_fake" type="sharp" />
-  </node>
-</launch>
