@@ -60,7 +60,7 @@ int main(int argc, char **argv)
       raw[0] = adc_right.getValue();
       raw[1] = adc_middle.getValue();
       raw[2] = adc_left.getValue();
-      //ROS_INFO("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
+      ROS_INFO("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
       sharp.header.stamp = ros::Time::now();
       for(int i=0;i<3;i++)
       {
