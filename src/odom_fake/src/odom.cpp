@@ -18,7 +18,7 @@ int stoi(std::string Text)
 int main(int argc,char** argv){
 	ros::init(argc, argv, "odometry_publisher");
 	ros::NodeHandle n;
-	ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom",50);
+	ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("base_pose_ground_truth",50);
 	ros::Rate r(1.0);
 	std::string raw_st[2];
 	double position_actuelle_gauche=0, position_actuelle_droit=0;
