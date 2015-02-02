@@ -17,6 +17,6 @@ catkin_package()
 ## Build talker and listener
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(odom src/odom.cpp src/SysFsHelper.cpp)
-target_link_libraries(odom ${catkin_LIBRARIES})
-add_dependencies(odom odom_generate_messages_cpp)
+add_executable(odom_fake src/odom.cpp src/SysFsHelper.cpp)
+target_link_libraries(odom_fake ${catkin_LIBRARIES})
+add_dependencies(odom_fake odom_fake_generate_messages_cpp)

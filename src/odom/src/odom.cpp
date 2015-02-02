@@ -13,8 +13,8 @@ int main(int argc, char** argv){
   ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
   tf::TransformBroadcaster odom_broadcaster;
 
-  //std::string pos_left_file = resolveFilePath("/sys/devices/ocp.*/48304000.epwmss/48304180.eqep/position");
-  //std::string pos_right_file = resolveFilePath("/sys/devices/ocp.*/48302000.epwmss/48302180.eqep/position");
+  std::string pos_left_file = resolveFilePath("/sys/devices/ocp.*/48304000.epwmss/48304180.eqep/position");
+  std::string pos_right_file = resolveFilePath("/sys/devices/ocp.*/48302000.epwmss/48302180.eqep/position");
 
   double x = 0.0f;
   double y = 0.0f;
@@ -24,8 +24,8 @@ int main(int argc, char** argv){
   double vy = 0.0f;
   double vth = 0.0f;
 
-  double left_last = 0;
-  double right_last = 0;
+  double left_last = ((double) readFile<unsigned int>(pos_left_file)) * 0.001693515f;
+  double right_last = ((double) readFile<unsigned int>(pos_right_file)) * 0.001693515f;
 
   ros::Time current_time, last_time;
   current_time = ros::Time::now();
@@ -39,10 +39,10 @@ int main(int argc, char** argv){
 
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();
-    double left = 0;
+    double left = ((double) readFile<unsigned int>(pos_left_file)) * 0.001693515f;
     double dleft = left - left_last;
     left_last = left;
-    double right = 0;
+    double right = ((double) readFile<unsigned int>(pos_right_file)) * 0.001693515f;
     double dright = right - right_last;
     right_last = right;
     vx = (dright + dleft) / (2.0f * dt);

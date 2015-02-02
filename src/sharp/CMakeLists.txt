@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sharp_fake)
+project(sharp)
 
 ## Find catkin and any catkin packages
 find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs)
@@ -17,6 +17,6 @@ catkin_package()
 ## Build talker and listener
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(sharp_fake src/sharp.cpp src/SysFsHelper.cpp src/ADC.cpp)
-target_link_libraries(sharp_fake ${catkin_LIBRARIES})
-add_dependencies(sharp_fake sharp_generate_messages_cpp)
+add_executable(sharp src/sharp.cpp src/SysFsHelper.cpp src/ADC.cpp)
+target_link_libraries(sharp ${catkin_LIBRARIES})
+add_dependencies(sharp sharp_generate_messages_cpp)

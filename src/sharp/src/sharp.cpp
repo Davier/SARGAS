@@ -19,9 +19,9 @@ int stoi(std::string Text)
 int main(int argc, char **argv)
 {
   try {
-    //ADC adc_right(4); 
-    //ADC adc_middle(5); 
-    //ADC adc_left(6); 
+    ADC adc_right(4); 
+    ADC adc_middle(5); 
+    ADC adc_left(6); 
 
     ros::init(argc, argv, "sharp");
 
@@ -57,9 +57,9 @@ int main(int argc, char **argv)
  
     while (ros::ok())
     {
-      raw[0] = 0;
-      raw[1] = 0;
-      raw[2] = 0;
+      raw[0] = adc_right.getValue();
+      raw[1] = adc_middle.getValue();
+      raw[2] = adc_left.getValue();
       ROS_DEBUG("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
       sharp.header.stamp = ros::Time::now();
       for(int i=0;i<3;i++)

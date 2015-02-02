@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sharp_fake)
+project(odom)
 
 ## Find catkin and any catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp nav_msgs tf)
 
 ## Declare ROS messages and services
 #add_message_files(FILES Num.msg)
@@ -17,6 +17,6 @@ catkin_package()
 ## Build talker and listener
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(sharp_fake src/sharp.cpp src/SysFsHelper.cpp src/ADC.cpp)
-target_link_libraries(sharp_fake ${catkin_LIBRARIES})
-add_dependencies(sharp_fake sharp_generate_messages_cpp)
+add_executable(odom src/odom.cpp src/SysFsHelper.cpp)
+target_link_libraries(odom ${catkin_LIBRARIES})
+add_dependencies(odom odom_generate_messages_cpp)
