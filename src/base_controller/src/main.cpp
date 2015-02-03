@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 			if(last_command_dirty) {
 				last_command_dirty = false;
 				float duty_linear = 5.0f;
-				if(last_command->linear.x < -0.01f) {
+				if(last_command->linear.x > -0.01f) {
 
 					duty_linear = 5.130f;
 				}
@@ -64,6 +64,7 @@ int main(int argc, char **argv) {
 			ros::spinOnce();
 			loop_rate.sleep();
 		}
+	motor_linear.setDuty(5.0f);
 	}
 	catch (std::exception &e) {
 		ROS_ERROR("Exception : %s", e.what());
