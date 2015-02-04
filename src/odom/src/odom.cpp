@@ -24,8 +24,9 @@ int main(int argc, char** argv){
   double vy = 0.0f;
   double vth = 0.0f;
 
-  double coef_length = 0.00520833333;
-  double coef_angle = 0.023326339236;
+  const double coef_left = 1.0 / 336.0;
+  const double coef_right = 1.0 / 406.0;
+  double coef_angle = 3.712756079;
   int left_last = readFile<int>(pos_left_file);
   int right_last = readFile<int>(pos_right_file);
 
@@ -40,15 +41,17 @@ int main(int argc, char** argv){
     current_time = ros::Time::now();
 
     //compute odometry in a typical way given the velocities of the robot
-    double dt = (current_time - last_time).toSec();
+    double dt = (current_time - last_time).toSec(); // Time delta
     int left = readFile<int>(pos_left_file);
-    int dleft = left - left_last;
+    int dleft = left - left_last; // left tick delta
     left_last = left;
+    double dleft_meter = ((double)dleft) * coef_left; // left meters delta
     int right = readFile<int>(pos_right_file);
     int dright = right - right_last;
     right_last = right;
-    vx = ((double) (dright + dleft)) * coef_length / (2.0 * dt);
-    vth = ((double)(dright - dleft)) * coef_angle / dt;
+    double dright_meter = ((double)dright) * coef_right;
+    vx = ((double) (dright_meter + dleft_meter)) / (2.0 * dt);
+    vth = ((double)(dright_meter - dleft_meter)) * coef_angle / dt;
     double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;
@@ -57,6 +60,7 @@ int main(int argc, char** argv){
     y += delta_y;
     th += delta_th;
 
+    ROS_INFO("x:%f y:%f th:%f", x, y, th);
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
