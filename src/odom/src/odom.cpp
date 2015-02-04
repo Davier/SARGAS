@@ -24,8 +24,10 @@ int main(int argc, char** argv){
   double vy = 0.0f;
   double vth = 0.0f;
 
-  double left_last = ((double) readFile<unsigned int>(pos_left_file)) * 0.001693515f;
-  double right_last = ((double) readFile<unsigned int>(pos_right_file)) * 0.001693515f;
+  double coef_length = 0.00520833333;
+  double coef_angle = 0.023326339236;
+  int left_last = readFile<int>(pos_left_file);
+  int right_last = readFile<int>(pos_right_file);
 
   ros::Time current_time, last_time;
   current_time = ros::Time::now();
@@ -39,14 +41,14 @@ int main(int argc, char** argv){
 
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();
-    double left = ((double) readFile<unsigned int>(pos_left_file)) * 0.001693515f;
-    double dleft = left - left_last;
+    int left = readFile<int>(pos_left_file);
+    int dleft = left - left_last;
     left_last = left;
-    double right = ((double) readFile<unsigned int>(pos_right_file)) * 0.001693515f;
-    double dright = right - right_last;
+    int right = readFile<int>(pos_right_file);
+    int dright = right - right_last;
     right_last = right;
-    vx = (dright + dleft) / (2.0f * dt);
-    vth = (dright - dleft) / (0.276f * dt);
+    vx = ((double) (dright + dleft)) * coef_length / (2.0 * dt);
+    vth = ((double)(dright - dleft)) * coef_angle / dt;
     double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;

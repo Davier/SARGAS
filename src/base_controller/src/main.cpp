@@ -71,14 +71,14 @@ int main(int argc, char **argv) {
 			if(last_command_dirty) {
 				last_command_dirty = false;
 				float duty_linear = 5.0f;
-				if((last_command->linear.x > 0.0f)&&(DeadMan.getValue())&&(!CloseRange)) {
+				if((last_command->linear.x > 0.0f)&&(/*DeadMan.getValue()*/true)&&(!CloseRange)) {
 
 					duty_linear = 5.130f;
 				}
 				motor_linear.setDuty(duty_linear);
 				const float max_left = 6.25f;
 				const float max_right = 8.75f;
-				const float zero = (max_left + max_right) / 2.0f;
+				const float zero = 7.525f;
 				float duty_angular = zero + (max_right - zero) * last_command->angular.z; // commands should be normalized and clamped
 				servo_angular.setDuty(duty_angular);
 				ROS_INFO("Duty: l: %f / a: %f", duty_linear, duty_angular);
