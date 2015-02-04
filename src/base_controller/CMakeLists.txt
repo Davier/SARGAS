@@ -5,6 +5,7 @@ project(base_controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  sensor_msgs
   geometry_msgs
   std_msgs
   roscpp

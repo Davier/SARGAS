@@ -1,11 +1,15 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-
+#include "sensor_msgs/LaserScan.h"
+#include "GPIO.h"
 #include "PWM.hpp"
 #include "SysFsHelper.hpp"
 
 geometry_msgs::Twist::ConstPtr last_command;
 bool last_command_dirty = false;
+bool CloseRange=false;
+const bool in=true;
+const bool out=false;
 void commandReceivedCallback(const geometry_msgs::Twist::ConstPtr &msg) {
 	ROS_INFO("Commands: l: %f / a: %f", msg->linear.x, msg->angular.z);
 	last_command = msg;
@@ -25,6 +29,22 @@ void startFlightRegulator(PWM &motor) {
 	motor.setDuty(10.0f);
 }
 
+void LaserCallback(const sensor_msgs::LaserScan::ConstPtr& lasermsg)
+{
+  for(int i=0;i<3;i++)
+	{
+  		if(lasermsg.ranges[i]<0.3f)
+		{
+			CloseRange=true;
+			break;
+		}
+		else
+		{
+			CloseRange=false;
+		}
+	}
+}
+
 int main(int argc, char **argv) {
 	try {
 		// TODO: check why ros catches every exception ... meanwhile this must stay before ros::init()
@@ -38,10 +58,12 @@ int main(int argc, char **argv) {
 		servo_angular.setDuty(7.5f);
 		servo_angular.start();
 
+		GPIO DeadMan(42,out);		
+
 		ros::init(argc, argv, "base_controller");
 		ros::NodeHandle nh;
 		ros::Subscriber command_sub = nh.subscribe<geometry_msgs::Twist>("cmd_vel", 5, commandReceivedCallback); // Subscribe with a buffer of 2 messages
-	
+		ros::Subscriber laser_sub = nh.subscribe<sensor_msgs::LaserScan>("scan", 5, LaserCallback);//suscribe to scan to stop the robot if it's to close to something
 		//startFlightRegulator(motor_linear);
 		
 		ros::Rate loop_rate(100); // Execute loop at 100Hz
@@ -49,7 +71,7 @@ int main(int argc, char **argv) {
 			if(last_command_dirty) {
 				last_command_dirty = false;
 				float duty_linear = 5.0f;
-				if(last_command->linear.x > 0.0f) {
+				if((last_command->linear.x > 0.0f)&&(DeadMan.getValue())&&(!CloseRange)) {
 
 					duty_linear = 5.130f;
 				}
