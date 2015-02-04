@@ -58,35 +58,32 @@ int main(int argc, char **argv)
  
     while (ros::ok())
     {
-      raw[0]+= adc_right.getValue();
-      raw[1]+= adc_middle.getValue();
-      raw[2]+= adc_left.getValue();
-      k=k+1;
-      if(k==9)
-	{
-	 raw[0]=raw[0]/(10.0f);
-	 raw[1]=raw[1]/(10.0f);
-	 raw[2]=raw[2]/(10.0f);
-         ROS_DEBUG("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
-         sharp.header.stamp = ros::Time::now();
-      	 for(int i=0;i<3;i++)
-          {
-  	   if(raw[i]>1024)
-  	   {
-            raw[i]=1024;
-           }
-           else if(raw[i]<85)//a determiner
-  	   {
-  	    raw[i]=1;
-  	   } 
-          sharp.ranges[i]=lookup[i][raw[i]-1]+offset[i];
-          }	
+      for (int k=0;k<10;k++){
+      	raw[0]+= adc_right.getValue();
+      	raw[1]+= adc_middle.getValue();
+      	raw[2]+= adc_left.getValue();
+	}
+	raw[0]=raw[0]/(10.0f);
+	raw[1]=raw[1]/(10.0f);
+	raw[2]=raw[2]/(10.0f);
+        ROS_DEBUG("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
+        sharp.header.stamp = ros::Time::now();
+      	for(int i=0;i<3;i++)
+         {
+  	  if(raw[i]>1024)
+  	  {
+           raw[i]=1024;
+          }
+          else if(raw[i]<85)//a determiner
+  	  {
+  	   raw[i]=1;
+  	  } 
+         sharp.ranges[i]=lookup[i][raw[i]-1]+offset[i];
+         }	
 	 sharp_pub.publish(sharp);
-	 k=0;
-        }
+       }
       ros::spinOnce();
       loop_rate.sleep();
-    }
   }
   catch (std::exception &e) {
   	ROS_ERROR("Exception : %s", e.what());
