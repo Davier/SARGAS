@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 
 		PWM servo_angular(4, 0); // P8_19
 		servo_angular.setFrequency(50);
-		servo_angular.setDuty(7.5f);
+		servo_angular.setDuty(7.525f);
 		servo_angular.start();
 
 		GPIO DeadMan(42,out);		
@@ -79,7 +79,15 @@ int main(int argc, char **argv) {
 				const float max_left = 8.75;
 				const float max_right = 6.25f;
 				const float zero = 7.525f;
-				float duty_angular = zero + (max_right - zero) * last_command->angular.z; // commands should be normalized and clamped
+				const float coef_angle = 0.60f;
+				float order_angle = coef_angle * last_command->angular.z;
+				if(order_angle > 1.0) {
+					order_angle = 1.0;
+				}
+				else if(order_angle < -1.0) {
+					order_angle = -1.0;
+				}
+				float duty_angular = zero + (max_right - zero) * order_angle;
 				servo_angular.setDuty(duty_angular);
 				ROS_INFO("Duty: l: %f / a: %f", duty_linear, duty_angular);
 			}

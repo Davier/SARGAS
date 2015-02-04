@@ -34,9 +34,9 @@ int main(int argc, char **argv)
     unsigned int raw[3];
     float lookup[3][1024];
     
-    ros::Publisher sharp_pub= n.advertise<sensor_msgs::LaserScan>("scan", 50);
+    ros::Publisher sharp_pub= n.advertise<sensor_msgs::LaserScan>("scan", 10);
     
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(20);
     sensor_msgs::LaserScan sharp;
     
     sharp.header.frame_id="base_link";
@@ -57,9 +57,9 @@ int main(int argc, char **argv)
  
     while (ros::ok())
     {
-      raw[0] = adc_right.getValue();
-      raw[1] = adc_middle.getValue();
-      raw[2] = adc_left.getValue();
+      raw[0] = 0;//adc_right.getValue();
+      raw[1] = 0;//adc_middle.getValue();
+      raw[2] = 0;//adc_left.getValue();
       ROS_DEBUG("ADC values read: %u %u %u", raw[0], raw[1], raw[2]);
       sharp.header.stamp = ros::Time::now();
       for(int i=0;i<3;i++)

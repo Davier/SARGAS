@@ -10,7 +10,7 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "odometry_publisher");
 
   ros::NodeHandle n;
-  ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
+  ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 10);
   tf::TransformBroadcaster odom_broadcaster;
 
   std::string pos_left_file = resolveFilePath("/sys/devices/ocp.*/48304000.epwmss/48304180.eqep/position");
