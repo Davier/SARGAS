@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
-#include "GPIO.h"
+#include "GPIO.hpp"
 #include "PWM.hpp"
 #include "SysFsHelper.hpp"
 
@@ -33,7 +33,7 @@ void LaserCallback(const sensor_msgs::LaserScan::ConstPtr& lasermsg)
 {
   for(int i=0;i<3;i++)
 	{
-  		if(lasermsg.ranges[i]<0.3f)
+  		if(lasermsg->ranges[i]<0.3f)
 		{
 			CloseRange=true;
 			break;
