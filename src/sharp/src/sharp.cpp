@@ -62,7 +62,7 @@ int main(int argc, char **argv)
       raw[1]+= adc_middle.getValue();
       raw[2]+= adc_left.getValue();
       k=k+1;
-      if(k==10)
+      if(k==9)
 	{
 	 raw[0]=raw[0]/(10.0f);
 	 raw[1]=raw[1]/(10.0f);
