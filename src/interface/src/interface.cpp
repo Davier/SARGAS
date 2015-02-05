@@ -20,9 +20,9 @@ char choix;
 int taille_index;
 const bool in=true;
 const bool out=false;
-GPIO enter(67,in);
-GPIO avance(68,in);
-GPIO preced(68,in);
+GPIO enter(31,in);
+GPIO avance(60,in);
+GPIO preced(30,in);
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
@@ -66,14 +66,14 @@ int main(int argc, char** argv){
 	geometry_msgs::PoseWithCovarianceStamped initial_pose;
 	initial_pose.header.stamp=ros::Time::now();
 	initial_pose.header.frame_id="/map";
-	initial_pose.pose.pose.position.x=;
-	initial_pose.pose.pose.position.y=;
+	initial_pose.pose.pose.position.x=0;
+	initial_pose.pose.pose.position.y=0;
 	initial_pose.pose.pose.position.z=0;
 	initial_pose.pose.pose.orientation.x=0;
 	initial_pose.pose.pose.orientation.y=0;
 	initial_pose.pose.pose.orientation.z=0;
 	initial_pose.pose.pose.orientation.w=1;
-	ifstream index_file ("C:/Users/Florian/Documents/Florian/PC/PFE/index.xml");
+	ifstream index_file ("/opt/SARGAS/index.xml");
 	if (!index_file.is_open())
 	{
 		ROS_INFO("Critical error, could not find index file. Please refer to a specialist for help.");

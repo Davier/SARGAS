@@ -48,6 +48,11 @@ void LaserCallback(const sensor_msgs::LaserScan::ConstPtr& lasermsg)
 int main(int argc, char **argv) {
 	try {
 		// TODO: check why ros catches every exception ... meanwhile this must stay before ros::init()
+		const float max_right = 8.75;
+		const float max_left = 6.25f;
+		const float zero = 7.582f;
+		const float coef_angle = 0.60f;
+
 		PWM motor_linear(4, 1); // P8_13
 		motor_linear.setFrequency(50);
 		motor_linear.setDuty(5.0f);
@@ -55,10 +60,10 @@ int main(int argc, char **argv) {
 
 		PWM servo_angular(4, 0); // P8_19
 		servo_angular.setFrequency(50);
-		servo_angular.setDuty(7.525f);
+		servo_angular.setDuty(zero);
 		servo_angular.start();
 
-		GPIO DeadMan(42,out);		
+		GPIO DeadMan(15,in);		
 
 		ros::init(argc, argv, "base_controller");
 		ros::NodeHandle nh;
@@ -71,15 +76,10 @@ int main(int argc, char **argv) {
 			if(last_command_dirty) {
 				last_command_dirty = false;
 				float duty_linear = 5.0f;
-				if((last_command->linear.x > 0.0f)&&(/*DeadMan.getValue()*/true)&&(!CloseRange)) {
-
-					duty_linear = 5.130f;
+				if((last_command->linear.x > 0.0f)&&(!DeadMan.getValue())&&(!CloseRange)) {
+					duty_linear = 5.50f;
 				}
 				motor_linear.setDuty(duty_linear);
-				const float max_left = 8.75;
-				const float max_right = 6.25f;
-				const float zero = 7.525f;
-				const float coef_angle = 0.60f;
 				float order_angle = coef_angle * last_command->angular.z;
 				if(order_angle > 1.0) {
 					order_angle = 1.0;
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 				else if(order_angle < -1.0) {
 					order_angle = -1.0;
 				}
-				float duty_angular = zero + (max_right - zero) * order_angle;
+				float duty_angular = zero + (max_left - zero) * order_angle;
 				servo_angular.setDuty(duty_angular);
 				ROS_INFO("Duty: l: %f / a: %f", duty_linear, duty_angular);
 			}
