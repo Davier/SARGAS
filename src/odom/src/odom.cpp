@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   current_time = ros::Time::now();
   last_time = ros::Time::now();
 
-  ros::Rate r(22.0);
+  ros::Rate r(20.0);
   while(n.ok()){
 
     ros::spinOnce();               // check for incoming messages
@@ -60,7 +60,7 @@ int main(int argc, char** argv){
     y += delta_y;
     th += delta_th;
 
-    ROS_INFO("x:%f y:%f th:%f", x, y, th);
+    //ROS_INFO("x:%f y:%f th:%f", x, y, th);
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 

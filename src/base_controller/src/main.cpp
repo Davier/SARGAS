@@ -76,8 +76,8 @@ int main(int argc, char **argv) {
 					duty_linear = 5.130f;
 				}
 				motor_linear.setDuty(duty_linear);
-				const float max_left = 6.25f;
-				const float max_right = 8.75f;
+				const float max_left = 8.75;
+				const float max_right = 6.25f;
 				const float zero = 7.525f;
 				float duty_angular = zero + (max_right - zero) * last_command->angular.z; // commands should be normalized and clamped
 				servo_angular.setDuty(duty_angular);
