@@ -80,6 +80,7 @@ int main(int argc, char** argv){
 	y_coord=new double [taille_index];
 	index_file.clear();
 	index_file.seekg(0, ios::beg);
+	system(("cvlc"+file_list[taille_index-3]).c_str());
 	while (getline(index_file,current_line))
 	{
 		if(!current_line.compare("<nom_dest>"))
@@ -96,7 +97,6 @@ int main(int argc, char** argv){
 		}
 	}
 	while(n.ok()){
-		system(("cvlc"+file_list[i]).c_str());//choose a destination
 		i=0;
 		while(!enter.getValue())
 		{
@@ -104,7 +104,7 @@ int main(int argc, char** argv){
 			{
 				while(avance.getValue())
 				{}
-				i=i+1%taille_index;
+				i=i+1%(taille_index-4);
 			system(("cvlc"+file_list[i]).c_str());//play destination choisie
 			}
 			else if(preced.getValue())
@@ -113,7 +113,7 @@ int main(int argc, char** argv){
 				{}
 				if(i=0)
 				{			
-					i=taille_index;
+					i=taille_index-4;
 				}
 				else
 				{
@@ -124,7 +124,6 @@ int main(int argc, char** argv){
 		}
 		while(enter.getValue())
 		{}
-		system(("cvlc"+file_list[i]).c_str());//play destination choisie
 		goal.target_pose.header.frame_id = "base_link";
 	  	goal.target_pose.header.stamp = ros::Time::now();
 
@@ -137,6 +136,7 @@ int main(int argc, char** argv){
 
   		while(ac.getState() != actionlib::SimpleClientGoalState::SUCCEEDED)
     			ROS_INFO("En route pour le but");
+		system(("cvlc"+file_list[taille_index-2]).c_str());
 	}
 	delete [] file_list;
 	return 0;
