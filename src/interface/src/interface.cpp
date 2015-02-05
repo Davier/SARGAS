@@ -6,6 +6,7 @@
 #include <exception>
 #include "GPIO.hpp"
 #include <move_base_msgs/MoveBaseAction.h>
+#include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include <actionlib/client/simple_action_client.h>
 
 using namespace std;
@@ -56,13 +57,22 @@ int main(int argc, char** argv){
 	ros::init(argc, argv, "interface");
 	ros::NodeHandle n;
 	ros::Publisher goal_pub = n.advertise<move_base_msgs::MoveBaseAction>("goal", 50);
+	ros::Publisher init_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("initial_pose",50);
 	MoveBaseClient ac("move_base", true);
  	while(!ac.waitForServer(ros::Duration(5.0))){
     		ROS_INFO("Waiting for the move_base action server to come up");
   	}
 	move_base_msgs::MoveBaseGoal goal;
-	ROS_INFO("Welcome to S.A.R.G.A.s !");
-	//play welcome message
+	geometry_msgs::PoseWithCovarianceStamped initial_pose;
+	initial_pose.header.stamp=ros::Time::now();
+	initial_pose.header.frame_id="/map";
+	initial_pose.pose.pose.position.x=;
+	initial_pose.pose.pose.position.y=;
+	initial_pose.pose.pose.position.z=0;
+	initial_pose.pose.pose.orientation.x=0;
+	initial_pose.pose.pose.orientation.y=0;
+	initial_pose.pose.pose.orientation.z=0;
+	initial_pose.pose.pose.orientation.w=1;
 	ifstream index_file ("C:/Users/Florian/Documents/Florian/PC/PFE/index.xml");
 	if (!index_file.is_open())
 	{
@@ -80,6 +90,7 @@ int main(int argc, char** argv){
 	y_coord=new double [taille_index];
 	index_file.clear();
 	index_file.seekg(0, ios::beg);
+	ROS_INFO("Welcome to S.A.R.G.A.s !");
 	system(("cvlc"+file_list[taille_index-3]).c_str());
 	while (getline(index_file,current_line))
 	{
