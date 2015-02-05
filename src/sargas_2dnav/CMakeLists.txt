@@ -6,8 +6,8 @@ project(sargas_2dnav)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   move_base
-  odom_fake
-  sharp_fake
+  odom
+  sharp
 )
 
 ## System dependencies are found with CMake's conventions

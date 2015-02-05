@@ -24,9 +24,9 @@ int main(int argc, char** argv){
   double vy = 0.0f;
   double vth = 0.0f;
 
-  const double coef_left = 1.0 / 336.0;
-  const double coef_right = 1.0 / 406.0;
-  double coef_angle = 3.712756079;
+  const double coef_left = 0.002577319588;
+  const double coef_right = 0.002577319588;
+  double coef_angle = 3.627788925;//3.712756079;
   int left_last = readFile<int>(pos_left_file);
   int right_last = readFile<int>(pos_right_file);
 
@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   current_time = ros::Time::now();
   last_time = ros::Time::now();
 
-  ros::Rate r(20.0);
+  ros::Rate r(100.0);
   while(n.ok()){
 
     ros::spinOnce();               // check for incoming messages
@@ -50,17 +50,18 @@ int main(int argc, char** argv){
     int dright = right - right_last;
     right_last = right;
     double dright_meter = ((double)dright) * coef_right;
-    vx = ((double) (dright_meter + dleft_meter)) / (2.0 * dt);
-    vth = ((double)(dright_meter - dleft_meter)) * coef_angle / dt;
-    double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
-    double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
-    double delta_th = vth * dt;
+
+    double length = ((double) (dright_meter + dleft_meter)) / (2.0);
+    double angle = ((double)(dright_meter - dleft_meter * 1.3)) * coef_angle;
+    double delta_x = length * cos(th);
+    double delta_y = length * sin(th);
+    double delta_th = angle;
 
     x += delta_x;
     y += delta_y;
     th += delta_th;
 
-    //ROS_INFO("x:%f y:%f th:%f", x, y, th);
+    ROS_INFO("left:%f right:%f lenght:%f angle:%f x:%f y:%f th:%f", dleft_meter, dright_meter, length, angle, x, y, th);
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
@@ -91,9 +92,9 @@ int main(int argc, char** argv){
 
     //set the velocity
     odom.child_frame_id = "base_link";
-    odom.twist.twist.linear.x = vx;
-    odom.twist.twist.linear.y = vy;
-    odom.twist.twist.angular.z = vth;
+    odom.twist.twist.linear.x = length / dt;
+    odom.twist.twist.linear.y = 0;
+    odom.twist.twist.angular.z = angle / dt;
 
     //publish the message
     odom_pub.publish(odom);

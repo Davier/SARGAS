@@ -41,13 +41,7 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>move_base</build_depend>
-  <build_depend>odom_fake</build_depend>
-  <build_depend>sharp_fake</build_depend>
-  <build_depend>tf_fake</build_depend>
   <run_depend>move_base</run_depend>
-  <run_depend>odom_fake</run_depend>
-  <run_depend>sharp_fake</run_depend>
-  <run_depend>tf_fake</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
